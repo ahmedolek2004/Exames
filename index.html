@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCNA Quiz</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2300d4aa'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='%230a0e1a' font-weight='bold'%3E%C2%A7%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0e1a;
+    --card: #111827;
+    --card2: #1a2235;
+    --accent: #00d4aa;
+    --accent2: #3b82f6;
+    --wrong: #ef4444;
+    --text: #e2e8f0;
+    --sub: #94a3b8;
+    --border: #263347;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #0a0e1a;
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(0,212,170,0.07) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.07) 0%, transparent 60%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px 40px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    animation: fadeDown 0.6s ease;
+  }
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #00d4aa, #3b82f6);
+    color: #0a0e1a;
+    font-weight: 900;
+    font-size: 10px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .header h1 { font-size: 24px; font-weight: 900; }
+  .header p { color: #94a3b8; font-size: 13.5px; margin-top: 4px; }
+
+  .tutorial-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+    max-width: 100%;
+  }
+  .tab {
+    background: #111827;
+    border: 1.5px solid #263347;
+    color: #94a3b8;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab:hover { border-color: #00d4aa; color: #00d4aa; }
+  .tab.active {
+    background: linear-gradient(135deg, #00d4aa, #3b82f6);
+    color: #0a0e1a;
+    border-color: transparent;
+  }
+
+  .top-bar {
+    width: 100%;
+    max-width: 680px;
+    margin-bottom: 14px;
+  }
+  .progress-bar-wrap {
+    background: #1a2235;
+    border-radius: 20px;
+    height: 7px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00d4aa, #3b82f6);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+
+  .stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat {
+    background: #111827;
+    border: 1px solid #263347;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .quiz-card {
+    background: #111827;
+    border: 1px solid #263347;
+    border-radius: 20px;
+    padding: 24px 20px;
+    max-width: 680px;
+    width: 100%;
+    animation: fadeUp 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .quiz-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00d4aa, #3b82f6);
+  }
+
+  .q-number { font-size: 11px; color: #94a3b8; font-weight: 700; margin-bottom: 8px; }
+  .q-text {
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    background: #1a2235;
+    border: 1.5px solid #263347;
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: right;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-direction: row-reverse;
+    width: 100%;
+  }
+  .option:hover:not(:disabled) {
+    border-color: #3b82f6;
+    background: rgba(59,130,246,0.1);
+    transform: translateX(-3px);
+  }
+
+  .opt-label {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #263347;
+    color: #94a3b8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    display: none;
+  }
+  .feedback.show-fb { display: block; }
+
+  .nav-btns {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .btn {
+    flex: 1;
+    min-width: 140px;
+    background: linear-gradient(135deg, #00d4aa, #3b82f6);
+    color: #0a0e1a;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+  }
+  .btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 212, 170, 0.4);
+  }
+  .btn.secondary {
+    background: #1a2235;
+    color: #94a3b8;
+    border: 1.5px solid #263347;
+    box-shadow: none;
+  }
+  .btn.secondary:hover {
+    border-color: #3b82f6;
+    color: #e2e8f0;
+    background: #242e4a;
+  }
+
+  /* Result */
+  .result-screen {
+    max-width: 680px;
+    width: 100%;
+    text-align: center;
+    display: none;
+  }
+  .result-screen.show { display: block; }
+  .result-circle {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00d4aa, #3b82f6);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+    font-weight: 900;
+    color: #0a0e1a;
+    box-shadow: 0 0 50px rgba(0,212,170,0.3);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    body { padding: 16px 10px 30px; }
+    .header h1 { font-size: 21px; }
+    .quiz-card { padding: 20px 16px; }
+    .q-text { font-size: 15px; }
+    .option { padding: 13px 14px; font-size: 13.5px; }
+    .btn { padding: 13px 22px; font-size: 14px; }
+  }
+
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">CCNA QUIZ</div>
+  <h1>🎓 اختبر نفسك في CCNA</h1>
+  <p>اختار التيوتريال واجاوب الأسئلة</p>
+</div>
+
+<div class="tutorial-tabs" id="tabs"></div>
+
+<div class="top-bar">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="dot dot-green"></div><span id="correctCount">0</span> صح</div>
+    <div class="stat"><div class="dot dot-red"></div><span id="wrongCount">0</span> غلط</div>
+    <div class="stat"><div class="dot dot-gray"></div><span id="remainCount">0</span> باقي</div>
+  </div>
+</div>
+
+<div class="quiz-card" id="quizCard">
+  <div class="q-number" id="qNumber"></div>
+  <div class="q-text" id="qText"></div>
+  <div class="options" id="options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="nav-btns">
+    <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none">التالي ←</button>
+    <button class="btn secondary" onclick="restartQuiz()">🔄 إعادة</button>
+  </div>
+</div>
+
+<div class="result-screen" id="resultScreen">
+  <div class="result-circle" id="resultScore"></div>
+  <h2 id="resultTitle"></h2>
+  <p id="resultMsg"></p>
+  <button class="btn" onclick="restartQuiz()">🔄 العب تاني</button>
+</div>
+
+<script>
+const tutorials = {
+  "Tutorial 1: Networks": [
+    { q: "The client can be called as……", opts: ["Endpoint","Node","Media","More one choice"], ans: 3 },
+    { q: "Medias are plugged in ……… on clients and servers", opts: ["cable","WIFI","NIC","switch"], ans: 2 },
+    { q: "A local area network (LAN) is a collection of devices connected in one physical location such as……", opts: ["country","city","building","continent"], ans: 2 },
+    { q: "A campus area network (CAN) can be called as ………", opts: ["LAN","WAN","PAN","MAN"], ans: 3 },
+    { q: "Which of this is the most costly leased line?", opts: ["LAN","WAN","PAN","MAN"], ans: 1 },
+    { q: "Which of network type applies SOHO?", opts: ["LAN","WAN","PAN","MAN"], ans: 0 },
+    { q: "Ring topology is connected as …… shape", opts: ["rectangular","circular","triangle","none of them"], ans: 1 },
+    { q: "Which network topology is very reliable and very secure?", opts: ["Bus","Ring","Mesh","none of them"], ans: 2 },
+    { q: "Which network topology is unreliable and not secure?", opts: ["Bus","Ring","Star","More than one choice"], ans: 0 },
+    { q: "Tree topology is a group of ………… Topologies.", opts: ["Bus","Ring","Star","Mesh"], ans: 2 },
+    { q: "Which network topology is very low delay and very high cost?", opts: ["Bus","Ring","Star","Mesh"], ans: 3 },
+    { q: "Which network topology is very high delay and low security?", opts: ["Bus","Ring","Star","Mesh"], ans: 0 },
+  ],
+  "Tutorial 2: OSI Model": [
+    { q: "……… layer is responsible for moving frames from one hop to the next.", opts: ["transport","Network","physical","data link"], ans: 3 },
+    { q: "……… layer is responsible for the delivery of individual packets from source host to destination host.", opts: ["transport","Network","physical","data link"], ans: 1 },
+    { q: "……… layer is responsible for movements of individual bits from one hop to the next.", opts: ["transport","Network","physical","data link"], ans: 2 },
+    { q: "……… layer is responsible for the delivery of a message from one process to another.", opts: ["transport","Network","physical","data link"], ans: 0 },
+    { q: "IP of the machine is related to ………… layer", opts: ["session","presentation","Network","data link"], ans: 2 },
+    { q: "The dialog control is the responsibility of ……… layer.", opts: ["application","presentation","Network","session"], ans: 3 },
+    { q: "The compression of the data is the responsibility of ……… layer.", opts: ["application","presentation","Network","session"], ans: 1 },
+    { q: "The ………… layer is responsible for providing services to the user.", opts: ["application","presentation","Network","session"], ans: 0 },
+    { q: "The synchronization is the responsibility of ……… layer.", opts: ["application","session","Network","transport"], ans: 1 },
+    { q: "The …… layer transmits bits over the medium for providing mechanical and electrical specifications.", opts: ["data link","session","Network","physical"], ans: 3 },
+    { q: "The encryption and translation of the data is the responsibility of ……… layer.", opts: ["application","presentation","Network","session"], ans: 1 },
+  ],
+  "Tutorial 3: TCP/IP": [
+    { q: "Application Layer has combined ………… layers in TCP/IP model.", opts: ["2","3","4","5"], ans: 1 },
+    { q: "The ……… layer defines how applications interact with the network in TCP/IP model.", opts: ["transport","Network access","application","Internet"], ans: 2 },
+    { q: "The ……… layer manages IP addressing, routing, and network connectivity in TCP/IP model.", opts: ["transport","Network access","application","Internet"], ans: 3 },
+    { q: "Simple Mail Transfer Protocol, handling email transmission is called………", opts: ["FTP","HTTP","SMTP","DNS"], ans: 2 },
+    { q: "HTTP locates in ……… layer in TCP/IP model.", opts: ["transport","Network access","application","Internet"], ans: 2 },
+    { q: "………… requires a connection setup and provides error checking.", opts: ["PDU","TCP","UDP","HTTP"], ans: 1 },
+    { q: "The ……… layer adds the IP header, including source and destination IP addresses.", opts: ["transport","Network access","application","Internet"], ans: 3 },
+    { q: "……… is a connectionless protocol that prioritizes speed and efficiency.", opts: ["PDU","TCP","UDP","HTTP"], ans: 2 },
+    { q: "The ……… layer handles error detection and correction and manages access to the physical medium.", opts: ["physical","transport","Network","data link"], ans: 3 },
+    { q: "The process called ………… divides a large network into smaller subnetworks.", opts: ["IP addressing","Sub-netting","Routing","data integrity"], ans: 1 },
+    { q: "The ……… layer is responsible for the port address.", opts: ["physical","data link","Network","transport"], ans: 3 },
+    { q: "The ……… layer is responsible for the specific address.", opts: ["Application","data link","Network","transport"], ans: 1 },
+  ],
+  "Tutorial 4: Physical": [
+    { q: "………… is the measure of usable data transferred over a given period of time", opts: ["Latency","Goodput","Throughput","Bandwidth"], ans: 1 },
+    { q: "…………… is how the bit values, '1' and '0' are represented on the physical medium.", opts: ["Encoding","Decoding","Modulation","Signaling"], ans: 3 },
+    { q: "Throughput is the amount of time including delays for data to travel from one point to another", opts: ["True","False"], ans: 1 },
+    { q: "STP cables are shielded and protect against EMI and UTP lacks the same protection.", opts: ["True","False"], ans: 0 },
+    { q: "……… is the measure of the transfer of bits across the media over a given period of time", opts: ["Bandwidth","Latency","Throughput","Capacity"], ans: 0 },
+    { q: "UTP cables are less prone to crosstalk and STP cables are more prone to crosstalk.", opts: ["True","False"], ans: 1 },
+    { q: "Which condition makes TCP preferred over UDP?", opts: ["When reliability is critical","When dropped data is acceptable","When low latency is optimal"], ans: 0 },
+    { q: "……… converts the stream of bits into a format recognizable by the next device.", opts: ["Signaling","Decoding","Encoding"], ans: 1 },
+    { q: "What does digital bandwidth measure in a network?", opts: ["The size of data packets","The number of connections","The amount of data transmitted per unit time"], ans: 2 },
+    { q: "What is one primary limitation of copper cabling in networks?", opts: ["High cost","Difficult installation process","Attenuation of electrical signals"], ans: 2 },
+    { q: "How does copper cabling mitigate crosstalk?", opts: ["Using metallic shielding","Increasing cable length","Twisting opposing circuit pair wires"], ans: 2 },
+    { q: "The method of signaling will vary based on the type of medium being used.", opts: ["True","False"], ans: 0 },
+  ],
+  "Tutorial 5: Physical 2": [
+    { q: "Increased dispersion means ………… loss of signal strength in the optical fiber", opts: ["Decrease","increase","no","other"], ans: 1 },
+    { q: "Compared to Multimode Fiber, Single-mode Fiber has …… core and used in …… applications.", opts: ["larger, long distance","larger, small distance","smaller, long distance"], ans: 2 },
+    { q: "Which type of UTP cable is used to connect host to network device?", opts: ["console","rollover","crossover","straight-through"], ans: 3 },
+    { q: "What is one advantage of using fiber optic cabling rather than copper cabling?", opts: ["Lower cost of installation","Higher bandwidth and faster data transmission","Easier installation process"], ans: 1 },
+    { q: "Which transmission media provides the highest transmission speed in a network?", opts: ["coaxial cable","twisted pair cable","optical fiber","electrical cable"], ans: 2 },
+    { q: "Which factor significantly impacts the effective coverage area of a wireless network?", opts: ["Physical characteristics of the deployment location","The type of encryption used","The brand of wireless router","Number of devices in the network"], ans: 0 },
+    { q: "Which type of UTP cable is used to connect Host-to-Host?", opts: ["console","rollover","crossover","straight-through"], ans: 2 },
+    { q: "What is one major source of interference in wireless communication?", opts: ["Fiber optic cables","Common electronic devices like microwaves and Bluetooth devices","LAN cables","Satellite signals"], ans: 1 },
+    { q: "Which wireless standard is primarily used for local area networks (LANs)?", opts: ["Wi-Fi","Bluetooth","WiMAX","Zigbee"], ans: 0 },
+    { q: "Which wireless standard is best suited for creating a personal area network with low power consumption?", opts: ["Wi-Fi","Bluetooth","WiMAX","Zigbee"], ans: 3 },
+  ],
+  "Tutorial 6: Data Link": [
+    { q: "…………Layer is responsible for rejection the corrupted frames.", opts: ["transport","Network access","data link","application"], ans: 2 },
+    { q: "……… sublayer communicates between networking software at upper layers and device hardware at lower layers.", opts: ["MAC","LLC","IPV4","CSMA"], ans: 1 },
+    { q: "The …… topology identifies virtual connections between devices using device interfaces and IP addressing.", opts: ["port","logical","specific","physical"], ans: 1 },
+    { q: "The……… sublayer is responsible for data encapsulation and media access control.", opts: ["MAC","LLC","IPV4","CSMA"], ans: 0 },
+    { q: "………topology similar to a star topology where a central site interconnects branch sites through point-to-point links.", opts: ["Mesh","Hub and spoke","Point-to-point","Bus"], ans: 1 },
+    { q: "………… provides high availability but requires every end system to be connected to every other end system.", opts: ["Mesh","Hub and spoke","Point-to-point","Bus"], ans: 0 },
+    { q: "CSMA/CD is used on legacy bus-topology for ……connection", opts: ["wired","Ethernet","wireless","more than one choice"], ans: 3 },
+    { q: "……Uses a collision avoidance process to govern when a device can send.", opts: ["TDMA","CSMA/CD","CSMA/CA","NIC"], ans: 2 },
+    { q: "……uses a collision detection process to govern when a device can send.", opts: ["TDMA","CSMA/CD","CSMA/CA","NIC"], ans: 1 },
+    { q: "………indicates source and destination nodes", opts: ["Error Detection","Control","Data","Addressing"], ans: 3 },
+  ],
+  "Tutorial 7: Network Layer": [
+    { q: "What are the principal network layer communication protocols?", opts: ["TCP and UDP","IPv4 and IPv6","HTTP and FTP","ICMP and ARP"], ans: 1 },
+    { q: "Which of the following is NOT one of the basic operations performed by the network layer?", opts: ["Addressing end devices","Encapsulation","Data encryption","Routing"], ans: 2 },
+    { q: "What operation involves preparing data for transmission over the network?", opts: ["Addressing","Routing","Encapsulation","De-encapsulation"], ans: 2 },
+    { q: "How does IP addressing behave from source to destination?", opts: ["It changes frequently","It remains constant","It varies based on the protocol","It is variable depending on the device"], ans: 1 },
+    { q: "What is the main function of the IP layer in relation to transport layer segments?", opts: ["To encrypt data","To encapsulate the transport layer segment","To route data to the application layer","To manage physical connections"], ans: 1 },
+    { q: "What type of service does IP provide?", opts: ["Connection-oriented","Connectionless","Session-based","Stream-based"], ans: 1 },
+    { q: "How is the delivery of IP packets characterized?", opts: ["Guaranteed delivery","Best Effort","High Priority","Secure transmission"], ans: 1 },
+    { q: "What type of control information is needed when using IP?", opts: ["Synchronizations and acknowledgments","Only acknowledgments","No control information is needed","High-level control information"], ans: 2 },
+    { q: "What happens when the destination receives an IP packet?", opts: ["It must send a pre-notification","It receives the packet without pre-notifications","It establishes a connection first","It sends a synchronization signal"], ans: 1 },
+    { q: "What does it mean that IP is unreliable?", opts: ["It guarantees delivery","It cannot manage undelivered or corrupt packets","It always retransmits lost packets","It ensures packets are received in order"], ans: 1 },
+    { q: "What types of media can IP be sent over?", opts: ["Only copper","Only wireless","Copper, fiber, or wireless","Only fiber optics and coaxial"], ans: 2 },
+    { q: "Which of the following functions can IP NOT perform?", opts: ["Retransmit after an error","Route packets","Encapsulate data","Address end devices"], ans: 0 },
+  ],
+  "Tutorial 8: Transport Layer": [
+    { q: "What is the main role of the transport layer in the OSI model?", opts: ["Physical transmission of bits","Assigning IP addresses","Logical communication between applications on different hosts","Encrypting data"], ans: 2 },
+    { q: "Which two protocols operate at the transport layer?", opts: ["IP and ICMP","HTTP and FTP","TCP and UDP","ARP and DNS"], ans: 2 },
+    { q: "What does the transport layer use to keep track of multiple simultaneous conversations?", opts: ["Routing tables","Segmentation and multiplexing","MAC addressing","Port forwarding"], ans: 1 },
+    { q: "Which of the following is a connection-oriented transport protocol?", opts: ["UDP","TCP","IP","DHCP"], ans: 1 },
+    { q: "Which protocol provides faster, but less reliable communication?", opts: ["UDP","TCP","ICMP","HTTP"], ans: 0 },
+    { q: "What does TCP use to ensure that data segments arrive in the correct order?", opts: ["Port numbers","Sequence numbers","IP addresses","TTL values"], ans: 1 },
+    { q: "Which TCP header field identifies the sending application?", opts: ["Source Port","Destination Port","Acknowledgment Number","Checksum"], ans: 0 },
+    { q: "What is the function of the Acknowledgment Number field in the TCP header?", opts: ["To indicate the port number","To confirm receipt and indicate the next expected byte","To show header length","To measure propagation delay"], ans: 1 },
+    { q: "What is the purpose of the Window Size field in TCP?", opts: ["To set timeout duration","To define segment priority","To indicate how much data the receiver can accept","To show maximum retransmission count"], ans: 2 },
+    { q: "Which field in the TCP header checks for segment errors?", opts: ["Header Length","Urgent Pointer","Checksum","Control Bits"], ans: 2 },
+    { q: "What action does TCP take when data is not acknowledged in time?", opts: ["It drops the connection","It retransmits the unacknowledged data","It requests a DNS update","It resets the IP address"], ans: 1 },
+    { q: "The field \"Urgent\" in the TCP header is used when:", opts: ["Data exceeds the MTU","The destination port is blocked","The data is urgent and must be prioritized","The connection needs to be terminated"], ans: 2 },
+    { q: "Which applications are most likely to use TCP?", opts: ["Streaming services","Web browsing, email, and file transfers","Online gaming and VoIP"], ans: 1 },
+    { q: "What does UDP not do that TCP does?", opts: ["Use port numbers","Deliver data to applications","Establish a session and ensure reliability","Use IP addresses"], ans: 2 },
+    { q: "Which TCP flag is used to acknowledge received data?", opts: ["FIN","ACK","URG","PSH"], ans: 1 },
+    { q: "Which of the following applications typically uses UDP instead of TCP?", opts: ["Email (SMTP)","Video streaming","File transfer (FTP)","Web browsing (HTTP)"], ans: 1 },
+    { q: "Why do some applications prefer to use UDP over TCP?", opts: ["UDP is more reliable","UDP offers lower latency and less overhead","UDP guarantees in-order delivery","UDP performs automatic retransmission"], ans: 1 },
+    { q: "Which type of communication is most suitable for UDP?", opts: ["Banking transactions","Real-time voice and video (VoIP, live broadcasts)","Secure file transfers","Authentication systems"], ans: 1 }
+  ],
+
+  // ====================== Tutorial 9: IPv4 Addressing ======================
+  "Tutorial 9: IPv4 Addressing": [
+    { q: "What is the total bit length of an IPv4 address?", opts: ["16 bits","32 bits","64 bits","128 bits"], ans: 1 },
+    { q: "Which of the following best describes the structure of an IPv4 address?", opts: ["Only the network portion","Only the host portion","A combination of network and host portions","None of the above"], ans: 2 },
+    { q: "What is a prefix length in networking?", opts: ["The total number of IP addresses in a subnet","A method to identify a subnet mask address","The number of hosts in a network","The default gateway address"], ans: 1 },
+    { q: "How is the prefix length expressed?", opts: ["In decimal notation","As a binary string","In “slash notation”","As a hexadecimal value"], ans: 2 },
+    { q: "If a subnet mask is 255.255.255.0, what is the prefix length?", opts: ["/24","/16","/32","/8"], ans: 0 },
+    { q: "What does the result of the logical AND operation between a host IPv4 address and a subnet mask identify?", opts: ["The broadcast address","The network address","The host portion of the address","The DHCP server address"], ans: 1 },
+    { q: "Which of the following is NOT a type of IP address within a network?", opts: ["Network address","Host address","Gateway address","Broadcast address"], ans: 2 },
+    { q: "What type of IP address is assigned to individual devices within a network?", opts: ["Network address","Broadcast address","Host address","Subnet address"], ans: 2 },
+    { q: "What type of communication sends a message from one sender to one specific receiver?", opts: ["Broadcast","Multicast","Unicast","Anycast"], ans: 2 },
+    { q: "Which type of address is used for sending data to all devices on a network?", opts: ["Unicast address","Multicast address","Broadcast address","Subnet address"], ans: 2 },
+    { q: "In multicast communication, how many receivers can receive the message?", opts: ["Only one","All devices in the network","A specific group of devices","None"], ans: 2 }
+  ],
+  "Assignment 1: Computer Networks": [
+    { q: "The client can be called as........", opts: ["Endpoint","Node","Media","More one choice"], ans: 0 },
+    { q: "Medias are plugged in .......on clients and servers", opts: ["cable","WIFI","NIC","switch"], ans: 2 },
+    { q: "A local area network (LAN) is a collection of devices connected together in one physical location, such as........", opts: ["country","city","building","continent"], ans: 2 },
+    { q: "A campus area network (CAN) can be called as ........", opts: ["LAN","WAN","PAN","MAN"], ans: 3 },
+    { q: "Which of this is the most costly leased line ........", opts: ["LAN","WAN","PAN","MAN"], ans: 1 },
+    { q: "Which of network type applies SOHO?", opts: ["LAN","WAN","PAN","MAN"], ans: 0 },
+    { q: "Ring topology is connected as ..... shape", opts: ["rectangular","circular","triangle","none of them"], ans: 1 },
+    { q: "Which of this network topology is very reliable and very secure?", opts: ["Bus","Ring","Mesh","none of them"], ans: 2 },
+    { q: "Which of this network topology is unreliable and not secure?", opts: ["Bus","Ring","Star","More than one choice"], ans: 0 },
+    { q: "Tree topology is a group of ........ Topologies.", opts: ["Bus","Ring","Star","Mesh"], ans: 2 },
+    { q: "Which of this network topology is very low delay and very high cost?", opts: ["Bus","Ring","Star","Mesh"], ans: 3 },
+    { q: "Which of this network topology is very high delay and low security?", opts: ["Bus","Ring","Star","Mesh"], ans: 0 }
+  ],
+
+  // ====================== Assignment 2: Network Layer ======================
+  "Assignment 2: Network Layer": [
+    { q: "Which OSI layer is responsible for logical addressing and routing?", opts: ["Data Link","Transport","Network","Physical"], ans: 2 },
+    { q: "The main protocol used at the Network Layer is:", opts: ["TCP","UDP","IP","ARP"], ans: 2 },
+    { q: "Which of the following is NOT a basic operation of the Network Layer?", opts: ["Addressing","Routing","Encapsulation","Encryption"], ans: 3 },
+    { q: "IP is described as:", opts: ["Connection-oriented","Physical address","Best effort","Session-based"], ans: 2 },
+    { q: "Which field in IPv4 header prevents packets from looping forever?", opts: ["Protocol","TTL","Checksum","Version"], ans: 1 },
+    { q: "When TTL reaches zero, the router will:", opts: ["Forward the packet","Encrypt the packet","Drop the packet","Fragment the packet"], ans: 2 },
+    { q: "IPv4 address size is:", opts: ["16 bits","32 bits","64 bits","128 bits"], ans: 1 },
+    { q: "IPv6 was developed by:", opts: ["ISO","IEEE","IETF","Cisco"], ans: 2 },
+    { q: "IPv6 address size is:", opts: ["32 bits","64 bits","96 bits","128 bits"], ans: 3 },
+    { q: "Which IPv4 fields were removed in IPv6 to improve performance?", opts: ["Source Address","TTL","Header Checksum","Protocol"], ans: 2 },
+    { q: "TTL in IPv6 is replaced by:", opts: ["Time Limit","Hop Count","Hop Limit","Flow Label"], ans: 2 },
+    { q: "Which device is usually the Default Gateway?", opts: ["Hub","Switch","Router","Repeater"], ans: 2 },
+    { q: "If a destination is not on the same LAN, traffic is sent to:", opts: ["DNS Server","MAC Address","Default Gateway","Loopback Address"], ans: 2 },
+    { q: "Which command displays the routing table on Windows?", opts: ["ipconfig","show ip route","route print","traceroute"], ans: 2 },
+    { q: "Which routing table entry represents a directly connected network?", opts: ["S","D","C","O"], ans: 2 },
+    { q: "A default route is represented by which symbol?", opts: ["C","L","S","S*"], ans: 3 },
+    { q: "Static routing is best suited for:", opts: ["Large dynamic networks","Small simple networks","Wireless networks only","Internet backbone"], ans: 1 },
+    { q: "Dynamic routing protocols can:", opts: ["Discover networks automatically","Work without routers","Replace IP","Eliminate routing tables"], ans: 0 },
+    { q: "Which OSI layer is responsible for moving frames hop-to-hop?", opts: ["Physical","Network","Data Link","Transport"], ans: 2 },
+    { q: "Encapsulation means:", opts: ["Encrypting data","Compressing data","Adding headers at each layer","Routing packets"], ans: 2 }
+  ],
+  "Quiz CCNA ": [
+    { q: "The ...... sublayer is responsible for data encapsulation and media access control.", opts: ["LLC","MAC","IPV4","CSMA"], ans: 1 },
+    { q: "How is the prefix length expressed?", opts: ["In decimal notation","As a binary string","In “slash notation”","As a hexadecimal value"], ans: 2 },
+    { q: "Which condition makes TCP preferred over UDP?", opts: ["When reliability is critical","When dropped data is acceptable","When low latency is optimal"], ans: 0 },
+    { q: "What is the purpose of the Window Size field in TCP?", opts: ["To set timeout duration","To define segment priority","To indicate how much data the receiver can accept","To show maximum retransmission count"], ans: 2 },
+    { q: "The field \"Urgent\" in the TCP header is used when:", opts: ["Data exceeds the MTU","The destination port is blocked","The data is urgent and must be prioritized","The connection needs to be terminated"], ans: 2 },
+    { q: "The method of signaling will vary based on the type of medium being used.", opts: ["True","False"], ans: 0 },
+    { q: "Tree topology is a group of ........ Topologies.", opts: ["Bus","Ring","Star","Mesh"], ans: 2 },
+    { q: "UTP cables are less prone to crosstalk and interference and STP cables are more prone to crosstalk and interference.", opts: ["True","False"], ans: 1 },
+    { q: "What is the total bit length of an IPv4 address?", opts: ["16 bits","32 bits","64 bits","128 bits"], ans: 1 },
+    { q: "...... layer is responsible for moving frames from one hop to the next.", opts: ["Transport","Network","Physical","Data link"], ans: 3 },
+    { q: "Hypertext Transfer Protocol... locates in ...... layer in TCP/IP model.", opts: ["Transport","Network access","Application","Internet"], ans: 2 },
+    { q: "What is the function of the Acknowledgment Number field in the TCP header?", opts: ["To indicate the port number","To confirm receipt and indicate the next expected byte","To show header length","To measure propagation delay"], ans: 1 },
+    { q: "Which of the following is NOT one of the basic operations performed by the network layer?", opts: ["Addressing","Routing","Encapsulation","Data encryption"], ans: 3 },
+    { q: "What type of communication sends a message from one sender to one specific receiver?", opts: ["Broadcast","Multicast","Unicast","Anycast"], ans: 2 },
+    { q: "The ...... layer handles error detection and correction... within a local network.", opts: ["Physical","Network","Data link","Transport"], ans: 2 },
+    { q: "...... provides high availability but requires every end system to be connected to every other end system.", opts: ["Mesh","Hub and spoke","Point-to-point","Bus"], ans: 0 },
+    { q: "Which of network type applies SOHO?", opts: ["LAN","WAN","PAN","MAN"], ans: 0 },
+    { q: "The ...... layer is responsible for providing services to the user.", opts: ["Application","Presentation","Network","Session"], ans: 0 },
+    { q: "The ...... layer transmits bits over the medium...", opts: ["Data link","Session","Network","Physical"], ans: 3 },
+    { q: "Which of this is the most costly leased line ........", opts: ["LAN","WAN","PAN","MAN"], ans: 1 },
+    { q: "A campus area network (CAN) can be called as ........", opts: ["LAN","WAN","PAN","MAN"], ans: 3 },
+    { q: "IP of the machine is related to ........ layer.", opts: ["Session","Presentation","Network","Data link"], ans: 2 },
+    { q: "What does the transport layer use to keep track of multiple simultaneous conversations?", opts: ["Routing tables","Segmentation and multiplexing","MAC addressing","Port forwarding"], ans: 1 },
+    { q: "The ...... layer defines how applications interact with the network... in TCP/IP model.", opts: ["Transport","Network access","Application","Internet"], ans: 2 },
+    { q: "What does the result of the logical AND operation... identify?", opts: ["The broadcast address","The network address","The host portion","The DHCP server address"], ans: 1 },
+    { q: "How is the delivery of IP packets characterized?", opts: ["Guaranteed delivery","Best Effort","High Priority","Secure transmission"], ans: 1 },
+    { q: "Which TCP flag is used to acknowledge received data?", opts: ["FIN","ACK","URG","PSH"], ans: 1 },
+    { q: "What type of IP address is assigned to individual devices within a network?", opts: ["Network address","Broadcast address","Host address","Subnet address"], ans: 2 },
+    { q: "...... is the measure of usable data transferred over a given period of time.", opts: ["Latency","Goodput","Throughput","Bandwidth"], ans: 1 },
+    { q: "The client can be called as........", opts: ["Endpoint","Node","Media","More one choice"], ans: 3 },
+    { q: "Which two protocols operate at the transport layer?", opts: ["IP and ICMP","HTTP and FTP","TCP and UDP","ARP and DNS"], ans: 2 },
+    { q: "...... is a connectionless protocol that prioritizes speed and efficiency...", opts: ["TCP","UDP","HTTP","IP"], ans: 1 },
+    { q: "What is the main function of the IP layer in relation to transport layer segments?", opts: ["To encrypt data","To encapsulate the transport layer segment","To route data to the application layer","To manage physical connections"], ans: 1 },
+    { q: "The ...... topology identifies the virtual connections between devices using device interfaces and IP addressing schemes.", opts: ["Physical","Logical","Specific","Port"], ans: 1 },
+    { q: "What is a prefix length in networking?", opts: ["The total number of IP addresses in a subnet","A method to identify a subnet mask address","The number of hosts in a network","The default gateway address"], ans: 1 },
+    { q: "What is the main role of the transport layer in the OSI model?", opts: ["Physical transmission of bits","Assigning IP addresses","Logical communication between applications on different hosts","Encrypting data"], ans: 2 },
+    { q: "...... is how the bit values, “1” and “0” are represented on the physical medium.", opts: ["Encoding","Decoding","Modulation","Signaling"], ans: 3 },
+    { q: "Which of the following applications typically uses UDP instead of TCP?", opts: ["Email (SMTP)","Video streaming","File transfer (FTP)","Web browsing (HTTP)"], ans: 1 },
+    { q: "Which of the following functions can IP NOT perform?", opts: ["Retransmit after an error","Route packets","Encapsulate data","Address end devices"], ans: 0 },
+    { q: "Which type of communication is most suitable for UDP?", opts: ["Banking transactions","Real-time voice and video (VoIP, live broadcasts)","Secure file transfers","Authentication systems"], ans: 1 },
+    { q: "The ...... layer adds the IP header... for packet routing.", opts: ["Transport","Network access","Application","Internet"], ans: 3 },
+    { q: "...... topology similar to a star topology where a central site interconnects branch sites...", opts: ["Mesh","Hub and spoke","Point-to-point","Bus"], ans: 1 },
+    { q: "...... indicates source and destination nodes.", opts: ["Error Detection","Control","Data","Addressing"], ans: 3 },
+    { q: "A local area network (LAN) is a collection of devices connected together in one physical location, such as......", opts: ["country","city","building","continent"], ans: 2 },
+    { q: "Throughput is the amount of time, including delays, for data to travel from one point to another.", opts: ["True","False"], ans: 1 },
+    { q: "Which protocol provides faster, but less reliable communication?", opts: ["UDP","TCP","ICMP","HTTP"], ans: 0 },
+    { q: "The ...... layer is responsible for the specific address.", opts: ["Application","Data link","Network","Transport"], ans: 1 },
+    { q: "Application Layer has combined ...... layers in TCP/IP model.", opts: ["2","3","4","5"], ans: 1 },
+    { q: "What operation involves preparing data for transmission over the network?", opts: ["Addressing","Routing","Encapsulation","De-encapsulation"], ans: 2 },
+    { q: "What does UDP not do that TCP does?", opts: ["Use port numbers","Deliver data to applications","Establish a session and ensure reliability","Use IP addresses"], ans: 2 },
+    { q: "The ...... layer Manages IP addressing... in TCP/IP model.", opts: ["Transport","Network access","Application","Internet"], ans: 3 },
+    { q: "Medias are plugged in ...... on clients and servers.", opts: ["cable","WIFI","NIC","switch"], ans: 2 },
+    { q: "The ...... layer is responsible for the port address.", opts: ["Physical","Data link","Network","Transport"], ans: 3 },
+    { q: "Which of the following is a connection-oriented transport protocol?", opts: ["UDP","TCP","IP","DHCP"], ans: 1 },
+    { q: "Which of the following best describes the structure of an IPv4 address?", opts: ["Only the network portion","Only the host portion","A combination of network and host portions","None of the above"], ans: 2 },
+    { q: "Which of the following is NOT a type of IP address within a network?", opts: ["Network address","Host address","Gateway address","Broadcast address"], ans: 2 },
+    { q: "What happens when the destination receives an IP packet?", opts: ["It must send a pre-notification","It receives the packet without pre-notifications","It establishes a connection first","It sends a synchronization signal"], ans: 1 },
+    { q: "STP cables are shielded and protect against electromagnetic interference and UTP lacks the same protection...", opts: ["True","False"], ans: 0 },
+    { q: "Which field in the TCP header checks for segment errors?", opts: ["Header Length","Urgent Pointer","Checksum","Control Bits"], ans: 2 },
+    { q: "Which type of address is used for sending data to all devices on a network?", opts: ["Unicast address","Multicast address","Broadcast address","Subnet address"], ans: 2 },
+    { q: "How does IP addressing behave from source to destination?", opts: ["It changes frequently","It remains constant","It varies based on the protocol","It is variable depending on the device"], ans: 1 },
+    { q: "What types of media can IP be sent over?", opts: ["Only copper","Only wireless","Copper, fiber, or wireless","Only fiber optics and coaxial"], ans: 2 },
+    { q: "...... sublayer communicates between the networking software at the upper layers and the device hardware at the lower layers.", opts: ["MAC","LLC","IPV4","CSMA"], ans: 1 },
+    { q: "The dialog control is the responsibility of ...... layer.", opts: ["Application","Presentation","Network","Session"], ans: 3 },
+    { q: "Ring topology is connected as ...... shape.", opts: ["rectangular","circular","triangle","none of them"], ans: 1 },
+    { q: "Which of this network topology is very low delay and very high cost?", opts: ["Bus","Ring","Star","Mesh"], ans: 3 },
+    { q: "...... is the measure of the transfer of bits across the media over a given period of time.", opts: ["Bandwidth","Latency","Throughput","Capacity"], ans: 0 },
+    { q: "...... uses a collision detection process to govern when a device can send...", opts: ["TDMA","CSMA/CD","CSMA/CA","NIC"], ans: 1 },
+    { q: "The compression of the data is the responsibility of ...... layer.", opts: ["Application","Presentation","Network","Session"], ans: 1 },
+    { q: "What type of control information is needed when using IP?", opts: ["Synchronizations and acknowledgments","Only acknowledgments","No control information is needed","High-level control information"], ans: 2 },
+    { q: "...... Layer is responsible for rejection the corrupted frames.", opts: ["Transport","Network access","Data link","Application"], ans: 2 },
+    { q: "...... Uses a collision avoidance process to govern when a device can send...", opts: ["TDMA","CSMA/CD","CSMA/CA","NIC"], ans: 2 },
+    { q: "Which of this network topology is unreliable and not secure?", opts: ["Bus","Ring","Star","More than one choice"], ans: 0 },
+    { q: "What action does TCP take when data is not acknowledged in time?", opts: ["It drops the connection","It retransmits the unacknowledged data","It requests a DNS update","It resets the IP address"], ans: 1 },
+    { q: "Why do some applications prefer to use UDP over TCP?", opts: ["UDP is more reliable","UDP offers lower latency and less overhead","UDP guarantees in-order delivery","UDP performs automatic retransmission"], ans: 1 },
+    { q: "What are the principal network layer communication protocols?", opts: ["TCP and UDP","IPv4 and IPv6","HTTP and FTP","ICMP and ARP"], ans: 1 },
+    { q: "The encryption and translation of the data is the responsibility of ...... layer.", opts: ["Application","Presentation","Network","Session"], ans: 1 },
+    { q: "...... layer is responsible for the delivery of a message from one process to another.", opts: ["Transport","Network","Physical","Data link"], ans: 0 },
+    { q: "What does it mean that IP is unreliable?", opts: ["It guarantees delivery","It cannot manage undelivered or corrupt packets","It always retransmits lost packets","It ensures packets are received in order"], ans: 1 },
+    { q: "What does digital bandwidth measure in a network?", opts: ["The size of data packets","The number of connections","The amount of data transmitted per unit time"], ans: 2 },
+    { q: "...... converts the stream of bits into a format recognizable by the next device in the network path.", opts: ["Signaling","Decoding","Encoding"], ans: 2 },
+    { q: "In multicast communication, how many receivers can receive the message?", opts: ["Only one","All devices in the network","A specific group of devices","None"], ans: 2 },
+    { q: "...... requires a connection setup and provides error checking.", opts: ["PDU","TCP","UDP","HTTP"], ans: 1 },
+    { q: "...... layer is responsible for the delivery of individual packets from the source host to the destination host.", opts: ["Transport","Network","Physical","Data link"], ans: 1 },
+    { q: "If a subnet mask is 255.255.255.0, what is the prefix length?", opts: ["/24","/16","/32","/8"], ans: 0 },
+    { q: "Which of this network topology is very reliable and very secure?", opts: ["Bus","Ring","Mesh","none of them"], ans: 2 },
+    { q: "How does copper cabling mitigate crosstalk?", opts: ["Using metallic shielding","Increasing cable length","Twisting opposing circuit pair wires"], ans: 2 },
+    { q: "What type of service does IP provide?", opts: ["Connection-oriented","Connectionless","Session-based","Stream-based"], ans: 1 },
+    { q: "What is one of the primary limitations associated with copper cabling in networks?", opts: ["High cost","Difficult installation process","Attenuation of electrical signals"], ans: 2 },
+    { q: "The process is called...... dividing a large network into smaller subnetworks...", opts: ["IP addressing","Sub-netting","Routing","Data integrity"], ans: 1 },
+    { q: "Simple Mail Transfer Protocol, handling email transmission is called.........", opts: ["FTP","HTTP","SMTP","DNS"], ans: 2 },
+    { q: "CSMA/CD is used on legacy bus-topology for ...... connection.", opts: ["wired","Ethernet","wireless","more than one choice"], ans: 1 },
+    { q: "Which of this network topology is very high delay and low security?", opts: ["Bus","Ring","Star","Mesh"], ans: 0 },
+    { q: "...... layer is responsible for movements of individual bits from one hop to the next.", opts: ["Transport","Network","Physical","Data link"], ans: 2 },
+    { q: "The synchronization is the responsibility of ...... layer.", opts: ["Application","Session","Network","Transport"], ans: 1 },
+    { q: "What does TCP use to ensure that data segments arrive in the correct order?", opts: ["Port numbers","Sequence numbers","IP addresses","TTL values"], ans: 1 },
+    { q: "Which applications are most likely to use TCP?", opts: ["Streaming services","Web browsing, email, and file transfers","Online gaming and VoIP"], ans: 1 },
+    { q: "Which TCP header field identifies the sending application?", opts: ["Source Port","Destination Port","Acknowledgment Number","Checksum"], ans: 0 }
+  ]
+};
+
+let currentTutorial = Object.keys(tutorials)[0];
+let questions = [];
+let current = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+
+function loadTutorial(name) {
+  currentTutorial = name;
+  questions = [...tutorials[name]];
+  current = 0; correct = 0; wrong = 0; answered = false;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.name === name));
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  renderQuestion();
+  updateStats();
+}
+
+function renderQuestion() {
+  if (current >= questions.length) { showResult(); return; }
+  answered = false;
+  const q = questions[current];
+  document.getElementById('qNumber').textContent = 'سؤال ' + (current + 1) + ' من ' + questions.length;
+  document.getElementById('qText').textContent = q.q;
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  const labels = ['أ', 'ب', 'ج', 'د'];
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = '<span class="opt-label">' + labels[i] + '</span><span>' + opt + '</span>';
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('progressBar').style.width = ((current / questions.length) * 100) + '%';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('feedback');
+  if (idx === q.ans) {
+    opts[idx].classList.add('correct');
+    correct++;
+    fb.textContent = '✅ إجابة صحيحة! 🎉';
+    fb.className = 'feedback show-fb fb-correct';
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    wrong++;
+    fb.textContent = '❌ غلط! الإجابة الصحيحة: ' + q.opts[q.ans];
+    fb.className = 'feedback show-fb fb-wrong';
+  }
+
+  document.getElementById('nextBtn').style.display = 'block';
+  updateStats();
+}
+
+function nextQuestion() {
+  current++;
+  renderQuestion();
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('remainCount').textContent = Math.max(0, questions.length - current);
+}
+
+function showResult() {
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('resultScreen').classList.add('show');
+  document.getElementById('progressBar').style.width = '100%';
+  const pct = Math.round((correct / questions.length) * 100);
+  document.getElementById('resultScore').textContent = pct + '%';
+  let title, msg;
+  if (pct >= 80)      { title = '🏆 ممتاز جداً!';   msg = 'أجبت صح على ' + correct + ' من ' + questions.length + ' — شاطر!'; }
+  else if (pct >= 60) { title = '👍 كويس!';          msg = 'أجبت صح على ' + correct + ' من ' + questions.length + ' — تقدر أحسن!'; }
+  else                { title = '💪 حاول تاني!';     msg = 'أجبت صح على ' + correct + ' من ' + questions.length + ' — راجع المادة وحاول تاني.'; }
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent = msg;
+}
+
+function restartQuiz() { loadTutorial(currentTutorial); }
+
+// Build tabs
+const tabsEl = document.getElementById('tabs');
+Object.keys(tutorials).forEach(name => {
+  const btn = document.createElement('button');
+  btn.className = 'tab';
+  btn.dataset.name = name;
+  btn.textContent = name;
+  btn.onclick = () => loadTutorial(name);
+  tabsEl.appendChild(btn);
+});
+
+loadTutorial(currentTutorial);
+</script>
+</body>
+</html>
